@@ -1,0 +1,30 @@
+.rendu{
+    color: red;
+    border: 1px dashed;
+    background-color: aquamarine;
+}
+
+.nonRendu{
+    color: red;
+    border: 1px dashed;
+    border-radius: 15px;
+    background-color: bisque;
+}
+form{
+    display:flex;
+    flex-direction: column;
+    margin:5px;
+    border: 1px solid black;
+    border-radius: 15px;
+    background-color: whitesmoke;
+ }
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+} 
+
+.ajouterBtn{
+    align-self: flex-end;
+}

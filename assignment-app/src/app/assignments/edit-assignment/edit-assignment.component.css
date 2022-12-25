@@ -1,0 +1,9 @@
+form{
+    display: flex;
+    justify-content: space-evenly;
+}
+h1{
+    margin-left: 2%;
+    margin-top: 2%;
+    color: burlywood;
+}
