@@ -11,6 +11,15 @@ export class AssignmentsComponent implements OnInit {
   titre = "mon app sur les assignments !"
   formVisible=false;
   assignementSelectionne?:Assignment;
+  page: number=1;
+  limit: number=10;
+  totalDocs: number;
+  totalPages: number;
+  hasPrevPage: boolean;
+  prevPage: number;
+  hasNextPage: boolean;
+  nextPage: number;
+ 
  
   ajoutActive = false;
   assignments?:Assignment[];
@@ -28,8 +37,11 @@ export class AssignmentsComponent implements OnInit {
       this.ajoutActive = true;
     },2000);*/
     //this.assignments = this.assignmentService.getAssignments();
-    this.assignmentService.getAssignments()
+   /* this.assignmentService.getAssignments()
     .subscribe(assignments => this.assignments = assignments);
+    */
+   this.getAssignments();
+   
   }
  
   assignmentClique(assignment:Assignment) {
@@ -64,9 +76,51 @@ export class AssignmentsComponent implements OnInit {
   }
 
 getAssignments(){
-  this.assignmentService.getAssignments()
-  .subscribe(assignments => this.assignments = assignments);
+ /* this.assignmentService.getAssignments()
+  .subscribe(assignments => this.assignments = assignments);*/
+  this.assignmentService.getAssignmentPagine(this.page, this.limit)
+  .subscribe(data => {
+    this.assignments = data.docs;
+    this.page = data.page;
+    this.limit = data.limit;
+    this.totalDocs = data.totalDocs;
+    this.totalPages = data.totalPages;
+    this.hasPrevPage = data.hasPrevPage;
+    this.prevPage = data.prevPage;
+    this.hasNextPage = data.hasNextPage;
+    this.nextPage = data.nextPage;
+    console.log("données reçues");
+  });
+
 }
+
+pageSuivante(){
+  if(this.hasNextPage){
+    this.page = this.nextPage;
+    this.getAssignments();
+  }
+}
+
+  pagePrecedente(){
+    if(this.hasPrevPage){
+      this.page = this.prevPage;
+      this.getAssignments();
+    }
+  }
+
+  premierePage(){
+    this.page = 1;
+    this.getAssignments(); 
+  }
+
+  dernierePage(){
+    this.page = this.totalPages;
+    this.getAssignments();
+
+  }
+
+
+
 
 
 }

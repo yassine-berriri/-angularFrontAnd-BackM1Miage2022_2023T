@@ -18,7 +18,15 @@
 
 
 
-
+<p>Nombre total d'assignments = {{totalDocs}} </p>
+<p>nombre total de pages = {{totalPages}}</p>
+<p>nombre d'assignments par page : <input type="range" min=1 max=100 value=10 [(ngModel)]="limit" (change)="getAssignments()" >{{limit}}</p>
+<div class="buttons">
+<button mat-raised-button color="primary" (click)="premierePage()"  [disabled] ="page===1">premiere</button>&nbsp;
+<button mat-raised-button color="primary" (click)="pagePrecedente()" [disabled]="!hasPrevPage">precedent</button>&nbsp;
+<button mat-raised-button color="primary" (click)="pageSuivante()" [disabled] = "!hasNextPage">suivant</button>&nbsp;
+<button mat-raised-button color="primary" (click)="dernierePage()" [disabled] ="page===totalPages">derniere</button>
+</div>
 <mat-list *ngFor="let assignment of assignments">
   <nav><a routerLink="/assignment/{{assignment.id}}">
   <h3 mat-subheader>{{assignment.dateDeRendu | date}}</h3>

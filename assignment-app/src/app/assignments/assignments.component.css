@@ -28,3 +28,6 @@ form{
 .ajouterBtn{
     align-self: flex-end;
 }
+.buttons{
+    align-self: flex-start;
+}

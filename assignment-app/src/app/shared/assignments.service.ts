@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Assignment } from '../assignments/assignment.model';
-import { Observable,of, pipe } from 'rxjs';
+import { forkJoin, Observable,of, pipe } from 'rxjs';
 import { LoggingService } from './logging.service';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
+import {bdInitialAssignments} from './data';
 
 @Injectable({
   providedIn: 'root'
@@ -95,4 +96,42 @@ export class AssignmentsService {
   getNewId() :number { 
   return(this.assignments.length+1);
   }
+ 
+  getAssignmentPagine(page: number,limit:number):Observable<any>{
+    return this.http.get<any>(this.url+"?page=" + page + "&limit="+limit); 
+  }
+
+// version naive
+ peuplerBD(){
+    bdInitialAssignments.forEach(a =>{
+      let nouvelAssignment = new Assignment();
+      nouvelAssignment.nom = a.nom;
+      nouvelAssignment.id = a.id;
+      nouvelAssignment.dateDeRendu = new Date(Date.parse(a.dateDeRendu));
+      nouvelAssignment.rendu = a.rendu;
+      this.addAssignment(nouvelAssignment)
+      .subscribe(reponse =>{
+        console.log(reponse.message);
+      })
+    })
+  }
+
+  // version 2 
+  peuplerBDAvecForkJoin(): Observable<any> {
+    const appelsVersAddAssignment:any = [];
+ 
+    bdInitialAssignments.forEach((a) => {
+      const nouvelAssignment:any = new Assignment();
+ 
+      nouvelAssignment.id = a.id;
+      nouvelAssignment.nom = a.nom;
+      nouvelAssignment.dateDeRendu = new Date(Date.parse(a.dateDeRendu));
+      nouvelAssignment.rendu = a.rendu;
+ 
+      appelsVersAddAssignment.push(this.addAssignment(nouvelAssignment));
+    });
+    return forkJoin(appelsVersAddAssignment); // renvoie un seul Observable pour dire que c'est fini
+  }
+ 
+
 }
