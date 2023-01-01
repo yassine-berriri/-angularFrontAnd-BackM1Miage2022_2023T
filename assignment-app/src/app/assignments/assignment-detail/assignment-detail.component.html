@@ -6,16 +6,19 @@
     
     <mat-card-title>{{assignementTransmis.nom}}</mat-card-title>
     <mat-card-title>{{assignementTransmis.dateDeRendu | date}}</mat-card-title>
-    <mat-checkbox *ngIf="!assignementTransmis?.rendu"
+    <mat-card-subtitle>eleve :{{assignementTransmis.auteur}}</mat-card-subtitle>
+    <mat-card-subtitle>Note :{{assignementTransmis.note}}</mat-card-subtitle>
+    <mat-card-content>Remarque : {{assignementTransmis.remarque}}</mat-card-content>
+
+    <mat-checkbox [disabled]="!isEvaluated()" *ngIf="!assignementTransmis.rendu"
     (click)="onAssignmentRendu()">
         Devoir Rendu</mat-checkbox>
+        
         <br>
     <div class="buttons">
-            <button mat-stroked-button color="primary" (click)="onClickEdit()"
-            [disabled]="!isAdmin()"
-            >
-                Edit
-            </button>
+            <button mat-stroked-button color="primary" (click)="onClickEdit()"[disabled]="!isUser()">
+             Edit
+            </button>&nbsp;
        
         <button mat-fab color="primary" aria-label="Example icon button with a delete icon" (click)="onDeleteAssignment()"
         [disabled]="!isAdmin()"
@@ -23,7 +26,9 @@
             <mat-icon>delete</mat-icon>
           </button>
         </div>
-    
+        <br>
+        <p *ngIf="!isUser()"> il faut se connecter en tant que utilisateur pour modifier un devoir  </p>
+        <p *ngIf="!isAdmin()">il faut se connecter en tant que admin pour supprimer et modifier un devoir </p>
 </mat-card>
 
 </div>

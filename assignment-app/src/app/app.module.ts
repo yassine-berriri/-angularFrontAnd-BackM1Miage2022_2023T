@@ -19,6 +19,11 @@ import {MatListModule} from '@angular/material/list';
 import { NonRenduDirective } from './shared/non-rendu.directive';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+import { MatOptionModule } from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
+
 import { AddAssignmentComponent } from './assignments/add-assignment/add-assignment.component';
 
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -31,7 +36,7 @@ import { EditAssignmentComponent } from './assignments/edit-assignment/edit-assi
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule} from '@angular/common/http';
-
+import { AuthGuard} from './shared/auth.guard';
 /*const routes:Routes = [
   {
     path:"home",component:HomeComponent
@@ -60,7 +65,6 @@ import { HttpClientModule} from '@angular/common/http';
     HomeComponent,
     EditAssignmentComponent,
     
-    
 
   ],
   imports: [
@@ -81,10 +85,14 @@ import { HttpClientModule} from '@angular/common/http';
     MatToolbarModule,
     MatSidenavModule,
     MatSlideToggleModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    MatSortModule,
+    MatOptionModule,
+    MatSelectModule
 
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

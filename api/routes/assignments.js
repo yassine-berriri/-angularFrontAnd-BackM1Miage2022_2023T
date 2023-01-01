@@ -32,6 +32,7 @@ function getAssignment(req, res){
 
     Assignment.findOne({id: assignmentId}, (err, assignment) =>{
         if(err){res.send(err)}
+        
         res.json(assignment);
     })
 }
@@ -43,7 +44,12 @@ function postAssignment(req, res){
     assignment.nom = req.body.nom;
     assignment.dateDeRendu = req.body.dateDeRendu;
     assignment.rendu = req.body.rendu;
-
+    assignment.auteur = req.body.auteur;
+    assignment.note = req.body.note;
+    assignment.remarque = req.body.remarque;
+    assignment.matiere =req.body.matiere;
+    assignment.urlSubjectImage = req.body.urlSubjectImage;
+    assignment.urlTeacherImage = req.body.urlTeacherImage;
     console.log("POST assignment reçu :");
     console.log(assignment)
 

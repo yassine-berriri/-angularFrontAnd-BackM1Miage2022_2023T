@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {Assignment} from './assignment.model';
 import { AssignmentsService } from '../shared/assignments.service';
-import {formatDate} from '@angular/common';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
   styleUrls: ['./assignments.component.css']
 })
-export class AssignmentsComponent implements OnInit {
+export class AssignmentsComponent implements OnInit,AfterViewInit {
+  
   titre = "mon app sur les assignments !"
   formVisible=false;
   assignementSelectionne?:Assignment;
@@ -19,13 +22,17 @@ export class AssignmentsComponent implements OnInit {
   prevPage: number;
   hasNextPage: boolean;
   nextPage: number;
+
  
- 
+ //Pour le tableau 
+  displayedColumns: string[] = ['demo-id', 'demo-nom','demo-prof','demo-matiere', 'demo-eleve','demo-note','demo-dateDeRendu', 'demo-rendu'];
   ajoutActive = false;
   assignments?:Assignment[];
+  dataSource = new MatTableDataSource(this.assignments);
+  
  
   
-  constructor (private assignmentService:AssignmentsService) {
+  constructor (private assignmentService:AssignmentsService,private _liveAnnouncer: LiveAnnouncer) {
 
     
    }
@@ -41,6 +48,7 @@ export class AssignmentsComponent implements OnInit {
     .subscribe(assignments => this.assignments = assignments);
     */
    this.getAssignments();
+ 
    
   }
  
@@ -50,7 +58,7 @@ export class AssignmentsComponent implements OnInit {
   }
   onAddAssignmentBtnClick(){
    this.formVisible=!this.formVisible;
-   console.log(" this.formVisible", this.formVisible);
+
   }
 /*
   onNouvelAssignment(event:Assignment){
@@ -69,8 +77,6 @@ export class AssignmentsComponent implements OnInit {
   }
   
 }*/
-
-    
    
     
   }
@@ -89,7 +95,10 @@ getAssignments(){
     this.prevPage = data.prevPage;
     this.hasNextPage = data.hasNextPage;
     this.nextPage = data.nextPage;
-    console.log("données reçues");
+   this.dataSource = new MatTableDataSource(this.assignments);
+     
+   this.dataSource.sort = this.sort;
+    
   });
 
 }
@@ -119,6 +128,18 @@ pageSuivante(){
 
   }
 
+  @ViewChild(MatSort) sort: MatSort;
+
+  ngAfterViewInit() {
+  
+  //  this.dataSource.sort = this.sort;
+
+  }
+
+
+  
+
+ 
 
 
 

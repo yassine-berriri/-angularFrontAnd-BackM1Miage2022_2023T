@@ -6,7 +6,17 @@ let AssignmentSchema = Schema({
     id: Number,
     dateDeRendu: Date,
     nom: String,
-    rendu: Boolean
+    auteur: String,
+    rendu: Boolean,
+    note:Number,
+    remarque:String,  
+    matiere:{
+        type: String,
+        enum: ['base de données','Big data','Developpement web','Prog avancé java','planification de projet'],
+        default:'pending'
+    },
+    urlSubjectImage:String,
+    urlTeacherImage:String
 });
 
 AssignmentSchema.plugin(aggregatePaginate);

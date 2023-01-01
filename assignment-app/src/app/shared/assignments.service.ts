@@ -5,7 +5,8 @@ import { LoggingService } from './logging.service';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 import {bdInitialAssignments} from './data';
-
+import {bdInitialSubjects} from './subject';
+import { Subject } from '../assignments/subject.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +19,7 @@ export class AssignmentsService {
       'content-type' : 'application/json'
     })
   }
-
+  subjectList :Subject[];
   assignments=[
     {
       id:1,
@@ -75,10 +76,11 @@ export class AssignmentsService {
   getAssignment(id: number) : Observable<Assignment|undefined>{
     //return of(this.assignments.find(a=>a.id === id))
     return this.http.get<Assignment>(this.url + "/" + id)
-      .pipe(map(a => {
-        a.nom +=" transformé avec un pipe";  
+      .pipe(
+        /*map(a => {
+       // a.nom +=" transformé avec un pipe";  
         return a;
-      }),
+      }),*/
       tap(_ =>{
         console.log("tap: assignment avec id = "+id+" requete GET envoyé sur mongoDB cloud ");  
       }),
@@ -109,6 +111,12 @@ export class AssignmentsService {
       nouvelAssignment.id = a.id;
       nouvelAssignment.dateDeRendu = new Date(Date.parse(a.dateDeRendu));
       nouvelAssignment.rendu = a.rendu;
+      nouvelAssignment.auteur = a.auteur;
+      nouvelAssignment.note = a.note;
+      nouvelAssignment.remarque = a.remarque;
+      nouvelAssignment.matiere = a.matiere;
+      nouvelAssignment.urlSubjectImage = a.urlSubjectImage;
+      nouvelAssignment.urlTeacherImage = a.urlTeacherImage;
       this.addAssignment(nouvelAssignment)
       .subscribe(reponse =>{
         console.log(reponse.message);
@@ -119,19 +127,39 @@ export class AssignmentsService {
   // version 2 
   peuplerBDAvecForkJoin(): Observable<any> {
     const appelsVersAddAssignment:any = [];
- 
-    bdInitialAssignments.forEach((a) => {
-      const nouvelAssignment:any = new Assignment();
- 
-      nouvelAssignment.id = a.id;
-      nouvelAssignment.nom = a.nom;
-      nouvelAssignment.dateDeRendu = new Date(Date.parse(a.dateDeRendu));
-      nouvelAssignment.rendu = a.rendu;
- 
-      appelsVersAddAssignment.push(this.addAssignment(nouvelAssignment));
-    });
+   
+      bdInitialAssignments.forEach((a) => {
+        const nouvelAssignment:any = new Assignment();
+        nouvelAssignment.id = a.id;
+        nouvelAssignment.nom = a.nom;
+        nouvelAssignment.dateDeRendu = new Date(Date.parse(a.dateDeRendu));
+        nouvelAssignment.rendu = a.rendu;
+        nouvelAssignment.auteur = a.auteur;
+        nouvelAssignment.note = a.note;
+        nouvelAssignment.remarque = a.remarque;
+        nouvelAssignment.matiere = a.matiere;
+        nouvelAssignment.urlSubjectImage = a.urlSubjectImage;
+        nouvelAssignment.urlTeacherImage = a.urlTeacherImage;
+        appelsVersAddAssignment.push(this.addAssignment(nouvelAssignment));
+      });
+    
     return forkJoin(appelsVersAddAssignment); // renvoie un seul Observable pour dire que c'est fini
   }
+
+  getSubjects():Observable<Subject[]>{
+    //return of(this.assignments);
+   this.subjectList = bdInitialSubjects
+    return of(bdInitialSubjects) 
+  }
+
+  getSubjectById(id:number):Observable<Subject|undefined>{
+    return of(this.subjectList.find(a=>a.id === id));
+  }
+  getSubjectByName(name:string):Observable<Subject|undefined>{
+
+    return of(this.subjectList.find((a)=>{a.subjectName == name}));
+  }
+
  
 
 }

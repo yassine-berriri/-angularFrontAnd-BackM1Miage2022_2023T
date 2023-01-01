@@ -25,14 +25,20 @@ export class AssignmentDetailComponent implements OnInit {
 
 
   onAssignmentRendu() {
-    if( this.assignementTransmis !=undefined){
-      this.assignementTransmis.rendu =true;
-      //console.log("assignementTransmis",this.assignementTransmis?.rendu);
-      this.assignmentService.updateAssignment(this.assignementTransmis)
-      .subscribe(message => {
-        console.log(message)
-        this.router.navigate(["/assignments"]);
-      });
+    if( this.assignementTransmis !=undefined ){
+      if(this.assignementTransmis.note === undefined){
+        alert("vous ne pouvez pas marquer rendu un Assignment qui n'a pas été noté. ")
+      }
+      else{
+        this.assignementTransmis.rendu =true;
+        //console.log("assignementTransmis",this.assignementTransmis?.rendu);
+        this.assignmentService.updateAssignment(this.assignementTransmis)
+        .subscribe(message => {
+        
+          this.router.navigate(["/assignments"]);
+        });
+      }
+     
       
     }
     //this.router.navigate(["/assignments"]);
@@ -54,9 +60,6 @@ getAssignment(){
   const id =+this.route.snapshot.params['id'];
   this.assignmentService.getAssignment(id)
   .subscribe(assignment =>this.assignementTransmis = assignment)
-  
-
-
 }
 
 onClickEdit(){
@@ -66,6 +69,12 @@ onClickEdit(){
 
 isAdmin():boolean {
   //console.log("i'm here"+this.authService.loggedIn);
+  return this.authService.loggedIn && this.authService.admin;
+}
+isUser():boolean {
   return this.authService.loggedIn;
+}
+isEvaluated():boolean {
+  return this.assignementTransmis.note !==undefined 
 }
 }

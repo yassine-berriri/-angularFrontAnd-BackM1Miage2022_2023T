@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AssignmentsService } from './shared/assignments.service';
 import { AuthService } from './shared/auth.service';
@@ -8,9 +8,12 @@ import { AuthService } from './shared/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Application de gestion de devoirs à rendre (Assignments)';
    constructor(private authService:AuthService,private router:Router, private assignmentService : AssignmentsService){}
+  ngOnInit(): void {
+    this.router.navigate(['/assignments'])
+  }
    
    isAdmin(){
     //console.log("i'm here"+this.authService.loggedIn);
@@ -22,12 +25,12 @@ export class AppComponent {
     }
    }
   login(){
-      this.router.navigate(['/home'])
+      this.router.navigate(['/assignments'])
   }
   initialiserLaBase(){
     this.assignmentService.peuplerBDAvecForkJoin()
     .subscribe(() =>{
-      this.router.navigate(["/home"])
+      this.router.navigate(["/assignments"])
     }); 
     console.log("BD inisialisé");
   }
